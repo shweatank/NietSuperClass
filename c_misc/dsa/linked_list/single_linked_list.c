@@ -153,16 +153,75 @@ void reverserec(node** start,node* temp,node* prev, node* current){
     reverserec(start,temp,prev,current);
 }
 
+node *findmid(node*start){
+	if(start==NULL)return start;
+	node *tortoise=start;node*hare=start->next;
+	while(hare!=NULL && hare->next!=NULL){
+		tortoise=tortoise->next;
+		hare=hare->next->next;
+	}
+	return tortoise;
+}
+
+node* mergell(node *l1,node* l2){
+	node* dummy=create(-1);
+	node* temp= dummy;
+	while(l1 && l2){
+		if(l1->data<l2->data){
+			temp->next=l1;
+			temp=l1;
+			l1=l1->next;
+		}
+		else{
+			temp->next=l2;
+			temp=l2;
+			l2=l2->next;
+		}
+	}
+	if(l1)temp->next=l1;
+	if(l2)temp->next=l2;
+	return dummy->next;
+}
+
+node *sortll(node *head){
+	if(head==NULL || head->next==NULL)return head;
+	node *mid=findmid(head);
+	node *left=head;
+	node *right=mid->next;
+	mid->next=NULL;
+	left=sortll(left);
+	right=sortll(right);
+	return mergell(left,right);
+}
+
 int main(void){
-    node*start=insert_at_beginning(NULL,5);
-    insert_at_end(start,6);
-    insert_at_end(start,8);
-    insert_at_end(start,9);
-    node** startp=&start;
-    insert_at_position(startp,7,0);
-    update_node(startp,7,10);
-    reverserec(&start,NULL,NULL,start);
-    // p(start->data);
-    printll(start);
-    freell(start);
+    node*start1=insert_at_beginning(NULL,5);
+    insert_at_end(start1,6);
+    insert_at_end(start1,2);
+    insert_at_end(start1,3);
+    insert_at_end(start1,4);
+    insert_at_end(start1,1);
+    insert_at_end(start1,8);
+    insert_at_end(start1,9);
+    insert_at_position(&start1,7,0);
+    //node *sorted=sortll(start1);
+    //update_node(&start1,7,10);
+    //reverserec(&start1,NULL,NULL,start1);
+    p(findmid(start1)->data);
+    printll(start1);
+    //freell(start1);
+    node*start2=insert_at_beginning(NULL,2);
+    insert_at_end(start2,3);
+    insert_at_end(start2,4);
+    //insert_at_end(start1,9);
+    insert_at_position(&start2,7,0);
+    //update_node(&start1,7,10);
+    //reverserec(&start1,NULL,NULL,start1);
+    //p(findmid(start1)->data);
+    printll(start2);
+    node* merged=mergell(start1,start2);
+    node *sorted=sortll(merged);
+    //update_node(&start1,7,10);
+    printll(sorted);
+    //freell(start1);
 }
